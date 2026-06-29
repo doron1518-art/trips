@@ -187,10 +187,10 @@ export function IdeasClient({ tripId, initialIdeas }: Props) {
               </div>
 
               {/* Action buttons */}
-              <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-all duration-200">
+              <div className="absolute top-2 right-2 flex gap-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-all duration-200 z-10">
                 <button
                   onClick={() => { setEditingIdea(idea); setModalOpen(true) }}
-                  className="p-1.5 rounded-xl bg-white/90 backdrop-blur-sm text-gray-400 hover:text-sky-500 hover:bg-white shadow-sm transition-colors"
+                  className="p-2.5 sm:p-1.5 rounded-xl bg-white/90 backdrop-blur-sm text-gray-400 hover:text-sky-500 hover:bg-white shadow-sm transition-colors"
                   aria-label="Edit idea"
                 >
                   <Pencil className="w-3.5 h-3.5" />
@@ -198,7 +198,7 @@ export function IdeasClient({ tripId, initialIdeas }: Props) {
                 <button
                   onClick={() => handleDelete(idea.id)}
                   disabled={deleting === idea.id}
-                  className="p-1.5 rounded-xl bg-white/90 backdrop-blur-sm text-gray-400 hover:text-red-500 hover:bg-red-50 shadow-sm transition-colors"
+                  className="p-2.5 sm:p-1.5 rounded-xl bg-white/90 backdrop-blur-sm text-gray-400 hover:text-red-500 hover:bg-red-50 shadow-sm transition-colors"
                   aria-label="Delete idea"
                 >
                   <Trash2 className="w-3.5 h-3.5" />

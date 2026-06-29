@@ -13,6 +13,7 @@ interface Props {
 
 export function TripCard({ trip, onEdit, onDelete }: Props) {
   const gradient = tripGradient(trip.id)
+  const hasActions = onEdit || onDelete
 
   return (
     <div className="group relative rounded-3xl overflow-hidden bg-white border border-gray-100 shadow-md hover:shadow-2xl hover:shadow-sky-100 transition-all duration-300 hover:-translate-y-2 hover:scale-[1.02]">
@@ -68,9 +69,34 @@ export function TripCard({ trip, onEdit, onDelete }: Props) {
         </div>
       </Link>
 
-      {/* Action buttons — appear on hover, outside the Link */}
-      {(onEdit || onDelete) && (
-        <div className="absolute top-2 left-2 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10">
+      {/* Mobile: dedicated button row below the link — reliable tap targets */}
+      {hasActions && (
+        <div className="flex sm:hidden border-t border-gray-100">
+          {onEdit && (
+            <button
+              onClick={onEdit}
+              className="flex-1 flex items-center justify-center gap-1.5 py-2.5 text-xs font-medium text-gray-500 hover:text-sky-600 hover:bg-sky-50 transition-colors"
+            >
+              <Pencil className="w-3.5 h-3.5" />
+              Edit
+            </button>
+          )}
+          {onEdit && onDelete && <div className="w-px bg-gray-100" />}
+          {onDelete && (
+            <button
+              onClick={onDelete}
+              className="flex-1 flex items-center justify-center gap-1.5 py-2.5 text-xs font-medium text-gray-500 hover:text-red-500 hover:bg-red-50 transition-colors"
+            >
+              <Trash2 className="w-3.5 h-3.5" />
+              Delete
+            </button>
+          )}
+        </div>
+      )}
+
+      {/* Desktop: hover overlay buttons */}
+      {hasActions && (
+        <div className="hidden sm:flex absolute top-2 left-2 gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10">
           {onEdit && (
             <button
               onClick={onEdit}

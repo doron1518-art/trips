@@ -206,10 +206,10 @@ export function ItineraryClient({ tripId, initialItems }: Props) {
                       </div>
                     </div>
 
-                    <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-all shrink-0">
+                    <div className="flex gap-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-all shrink-0">
                       <button
                         onClick={() => { setEditingItem(item); setModalOpen(true) }}
-                        className="p-1.5 text-gray-300 hover:text-sky-500 hover:bg-sky-50 transition-all rounded-lg"
+                        className="p-2.5 sm:p-1.5 text-gray-300 hover:text-sky-500 hover:bg-sky-50 transition-all rounded-lg"
                         aria-label="Edit"
                       >
                         <Pencil className="w-3.5 h-3.5" />
@@ -217,7 +217,7 @@ export function ItineraryClient({ tripId, initialItems }: Props) {
                       <button
                         onClick={() => handleDelete(item.id)}
                         disabled={deleting === item.id}
-                        className="p-1.5 text-gray-300 hover:text-red-500 hover:bg-red-50 transition-all rounded-lg"
+                        className="p-2.5 sm:p-1.5 text-gray-300 hover:text-red-500 hover:bg-red-50 transition-all rounded-lg"
                         aria-label="Delete"
                       >
                         <Trash2 className="w-3.5 h-3.5" />

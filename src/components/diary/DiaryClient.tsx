@@ -129,10 +129,10 @@ export function DiaryClient({ tripId, initialEntries }: Props) {
                 {/* Card header */}
                 <div className="flex items-center justify-between px-5 py-3.5 border-b border-gray-50">
                   <p className="font-bold text-gray-900 text-sm">{formatDate(entry.date)}</p>
-                  <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-all">
+                  <div className="flex gap-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-all">
                   <button
                     onClick={() => { setEditingEntry(entry); setModalOpen(true) }}
-                    className="p-1.5 text-gray-300 hover:text-sky-500 hover:bg-sky-50 transition-all rounded-lg"
+                    className="p-2.5 sm:p-1.5 text-gray-300 hover:text-sky-500 hover:bg-sky-50 transition-all rounded-lg"
                     aria-label="Edit entry"
                   >
                     <Pencil className="w-3.5 h-3.5" />
@@ -140,7 +140,7 @@ export function DiaryClient({ tripId, initialEntries }: Props) {
                   <button
                     onClick={() => handleDelete(entry.id)}
                     disabled={deleting === entry.id}
-                    className="p-1.5 text-gray-300 hover:text-red-500 hover:bg-red-50 transition-all rounded-lg"
+                    className="p-2.5 sm:p-1.5 text-gray-300 hover:text-red-500 hover:bg-red-50 transition-all rounded-lg"
                     aria-label="Delete entry"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
