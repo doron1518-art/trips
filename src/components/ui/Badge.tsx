@@ -3,7 +3,7 @@ import { cn } from '@/lib/utils'
 type BadgeVariant =
   | 'food' | 'music' | 'culture' | 'nature' | 'adventure' | 'shopping' | 'other'
   | 'owner' | 'editor'
-  | 'event' | 'hotel' | 'transit' | 'concert' | 'tour'
+  | 'event' | 'hotel' | 'transit' | 'concert' | 'tour' | 'restaurant'
   | 'default'
 
 const VARIANTS: Record<BadgeVariant, string> = {
@@ -20,8 +20,9 @@ const VARIANTS: Record<BadgeVariant, string> = {
   hotel:     'bg-gradient-to-r from-violet-400 to-purple-600 text-white',
   transit:   'bg-gradient-to-r from-teal-400 to-cyan-500 text-white',
   concert:   'bg-gradient-to-r from-fuchsia-500 to-pink-500 text-white',
-  tour:      'bg-gradient-to-r from-lime-500 to-green-500 text-white',
-  default:   'bg-gradient-to-r from-gray-400 to-slate-400 text-white',
+  tour:       'bg-gradient-to-r from-lime-500 to-green-500 text-white',
+  restaurant: 'bg-gradient-to-r from-orange-400 to-red-500 text-white',
+  default:    'bg-gradient-to-r from-gray-400 to-slate-400 text-white',
 }
 
 const EMOJIS: Record<BadgeVariant, string> = {
@@ -38,8 +39,9 @@ const EMOJIS: Record<BadgeVariant, string> = {
   hotel:     '🏨',
   transit:   '✈️',
   concert:   '🎤',
-  tour:      '🚶‍♂️',
-  default:   '•',
+  tour:       '🚶‍♂️',
+  restaurant: '🍽️',
+  default:    '•',
 }
 
 interface BadgeProps {

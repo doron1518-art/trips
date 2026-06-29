@@ -15,21 +15,23 @@ type Item = Database['public']['Tables']['itinerary_items']['Row']
 type ItemType = Item['type']
 
 const TYPE_ICONS: Record<ItemType, string> = {
-  event:   '🎯',
-  hotel:   '🏨',
-  transit: '✈️',
-  other:   '📌',
-  concert: '🎤',
-  tour:    '🚶‍♂️',
+  event:      '🎯',
+  hotel:      '🏨',
+  transit:    '✈️',
+  other:      '📌',
+  concert:    '🎤',
+  tour:       '🚶‍♂️',
+  restaurant: '🍽️',
 }
 
 const TYPE_COLORS: Record<ItemType, string> = {
-  event:   'from-blue-400 to-cyan-500',
-  hotel:   'from-violet-400 to-purple-600',
-  transit: 'from-teal-400 to-cyan-500',
-  other:   'from-gray-400 to-slate-500',
-  concert: 'from-fuchsia-500 to-pink-500',
-  tour:    'from-lime-500 to-green-500',
+  event:      'from-blue-400 to-cyan-500',
+  hotel:      'from-violet-400 to-purple-600',
+  transit:    'from-teal-400 to-cyan-500',
+  other:      'from-gray-400 to-slate-500',
+  concert:    'from-fuchsia-500 to-pink-500',
+  tour:       'from-lime-500 to-green-500',
+  restaurant: 'from-orange-400 to-red-500',
 }
 
 function groupByDate(items: Item[]): Map<string, Item[]> {

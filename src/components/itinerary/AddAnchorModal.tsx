@@ -14,12 +14,13 @@ import type { Database } from '@/types/database'
 type Item = Database['public']['Tables']['itinerary_items']['Row']
 
 const TYPE_OPTIONS = [
-  { value: 'event',   label: '🎯  Event' },
-  { value: 'hotel',   label: '🏨  Hotel / Accommodation' },
-  { value: 'transit', label: '✈️  Transit / Transport' },
-  { value: 'concert', label: '🎤  Concert & Party 🥳' },
-  { value: 'tour',    label: '🚶‍♂️  Tour' },
-  { value: 'other',   label: '📌  Other' },
+  { value: 'event',      label: '🎯  Event' },
+  { value: 'hotel',      label: '🏨  Hotel / Accommodation' },
+  { value: 'transit',    label: '✈️  Transit / Transport' },
+  { value: 'restaurant', label: '🍽️  Restaurant / Bar' },
+  { value: 'concert',    label: '🎤  Concert & Party 🥳' },
+  { value: 'tour',       label: '🚶‍♂️  Tour' },
+  { value: 'other',      label: '📌  Other' },
 ]
 
 interface Props {

@@ -129,7 +129,7 @@ export type Database = {
           created_by: string
           date: string
           title: string
-          type: 'event' | 'hotel' | 'transit' | 'other' | 'concert' | 'tour'
+          type: 'event' | 'hotel' | 'transit' | 'other' | 'concert' | 'tour' | 'restaurant'
           description: string | null
           location: string | null
           time: string | null
@@ -144,7 +144,7 @@ export type Database = {
           created_by: string
           date: string
           title: string
-          type?: 'event' | 'hotel' | 'transit' | 'other' | 'concert' | 'tour'
+          type?: 'event' | 'hotel' | 'transit' | 'other' | 'concert' | 'tour' | 'restaurant'
           description?: string | null
           location?: string | null
           time?: string | null
@@ -159,7 +159,7 @@ export type Database = {
           created_by?: string
           date?: string
           title?: string
-          type?: 'event' | 'hotel' | 'transit' | 'other' | 'concert' | 'tour'
+          type?: 'event' | 'hotel' | 'transit' | 'other' | 'concert' | 'tour' | 'restaurant'
           description?: string | null
           location?: string | null
           time?: string | null
