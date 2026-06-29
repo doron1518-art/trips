@@ -274,7 +274,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      join_trip_by_code: {
+        Args: { p_code: string }
+        Returns: Json
+      }
     }
     Enums: {
       [_ in never]: never

@@ -55,37 +55,42 @@ export async function deleteTrip(tripId: string) {
 
 export async function joinTrip(code: string) {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return { error: 'Not authenticated' }
+
+  // Auth check
+  const { data: { user }, error: authError } = await supabase.auth.getUser()
+  if (authError || !user) {
+    console.error('[joinTrip] auth error:', authError)
+    return { error: 'Not authenticated' }
+  }
 
   const normalizedCode = code.trim().toUpperCase().replace(/[^A-Z0-9]/g, '')
-  if (normalizedCode.length !== 6) return { error: 'Code must be 6 characters.' }
+  console.log('[joinTrip] attempting code:', normalizedCode, 'user:', user.id)
 
-  const { data: trip } = await supabase
-    .from('trips')
-    .select('id, title')
-    .eq('join_code', normalizedCode)
-    .maybeSingle()
+  if (normalizedCode.length !== 6) {
+    return { error: 'Code must be exactly 6 characters.' }
+  }
 
-  if (!trip) return { error: 'Invalid code — double-check and try again.' }
+  // Call the SECURITY DEFINER function — bypasses RLS for both the trip lookup
+  // and the trip_members insert, so non-members can join via code.
+  const { data: result, error: rpcError } = await supabase
+    .rpc('join_trip_by_code', { p_code: normalizedCode })
 
-  const { data: existing } = await supabase
-    .from('trip_members')
-    .select('id')
-    .eq('trip_id', trip.id)
-    .eq('user_id', user.id)
-    .maybeSingle()
+  if (rpcError) {
+    console.error('[joinTrip] rpc error:', rpcError)
+    return { error: `Server error: ${rpcError.message}` }
+  }
 
-  if (existing) return { alreadyMember: true as const, tripId: trip.id, tripTitle: trip.title }
+  console.log('[joinTrip] rpc result:', result)
 
-  const { error } = await supabase.from('trip_members').insert({
-    trip_id: trip.id,
-    user_id: user.id,
-    role: 'editor' as const,
-  })
+  const res = result as { error?: string; already_member?: boolean; success?: boolean; trip_id?: string; trip_title?: string }
 
-  if (error) return { error: error.message }
+  if (res.error) return { error: res.error }
 
   revalidatePath('/trips')
-  return { success: true as const, tripId: trip.id, tripTitle: trip.title }
+
+  if (res.already_member) {
+    return { alreadyMember: true as const, tripId: res.trip_id!, tripTitle: res.trip_title! }
+  }
+
+  return { success: true as const, tripId: res.trip_id!, tripTitle: res.trip_title! }
 }
