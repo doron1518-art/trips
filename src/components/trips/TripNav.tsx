@@ -11,6 +11,7 @@ const TABS = [
   { label: 'Itinerary', emoji: '🗺️', href: 'itinerary' },
   { label: 'Ideas',     emoji: '💡', href: 'ideas' },
   { label: 'Diary',     emoji: '📖', href: 'diary' },
+  { label: 'Wallet',    emoji: '💼', href: 'wallet' },
 ]
 
 interface Props {

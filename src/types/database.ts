@@ -222,6 +222,47 @@ export type Database = {
           }
         ]
       }
+      wallet_items: {
+        Row: {
+          id: string
+          trip_id: string
+          created_by: string
+          title: string
+          category: string
+          file_url: string | null
+          notes: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          trip_id: string
+          created_by: string
+          title: string
+          category?: string
+          file_url?: string | null
+          notes?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          trip_id?: string
+          created_by?: string
+          title?: string
+          category?: string
+          file_url?: string | null
+          notes?: string | null
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'wallet_items_trip_id_fkey'
+            columns: ['trip_id']
+            isOneToOne: false
+            referencedRelation: 'trips'
+            referencedColumns: ['id']
+          }
+        ]
+      }
       diary_entries: {
         Row: {
           id: string
