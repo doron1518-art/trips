@@ -53,40 +53,39 @@ export async function deleteTrip(tripId: string) {
   return { success: true }
 }
 
-export async function inviteMember(tripId: string, email: string) {
+export async function joinTrip(code: string) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return { error: 'Not authenticated' }
 
-  const { data: membership } = await supabase
+  const normalizedCode = code.trim().toUpperCase().replace(/[^A-Z0-9]/g, '')
+  if (normalizedCode.length !== 6) return { error: 'Code must be 6 characters.' }
+
+  const { data: trip } = await supabase
+    .from('trips')
+    .select('id, title')
+    .eq('join_code', normalizedCode)
+    .maybeSingle()
+
+  if (!trip) return { error: 'Invalid code — double-check and try again.' }
+
+  const { data: existing } = await supabase
     .from('trip_members')
-    .select('role')
-    .eq('trip_id', tripId)
-    .eq('user_id', user.id)
-    .single()
-
-  if (membership?.role !== 'owner') return { error: 'Only the trip owner can invite members' }
-
-  const { data: profile } = await supabase
-    .from('profiles')
     .select('id')
-    .eq('email', email.toLowerCase().trim())
-    .single()
+    .eq('trip_id', trip.id)
+    .eq('user_id', user.id)
+    .maybeSingle()
 
-  if (!profile) return { error: 'No account found with that email address' }
-  if (profile.id === user.id) return { error: 'You are already the owner of this trip' }
+  if (existing) return { alreadyMember: true as const, tripId: trip.id, tripTitle: trip.title }
 
   const { error } = await supabase.from('trip_members').insert({
-    trip_id: tripId,
-    user_id: profile.id,
-    role: 'editor',
+    trip_id: trip.id,
+    user_id: user.id,
+    role: 'editor' as const,
   })
 
-  if (error) {
-    if (error.code === '23505') return { error: 'This user is already a member of this trip' }
-    return { error: error.message }
-  }
+  if (error) return { error: error.message }
 
-  revalidatePath(`/trips/${tripId}`)
-  return { success: true }
+  revalidatePath('/trips')
+  return { success: true as const, tripId: trip.id, tripTitle: trip.title }
 }

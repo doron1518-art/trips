@@ -1,11 +1,12 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Plus } from 'lucide-react'
+import { Plus, Hash } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { TripCard } from './TripCard'
 import { CreateTripModal } from './CreateTripModal'
 import { EditTripModal } from './EditTripModal'
+import { JoinTripModal } from './JoinTripModal'
 import { ConfirmModal } from '@/components/ui/ConfirmModal'
 import { deleteTrip } from '@/lib/actions/trips'
 import type { Database } from '@/types/database'
@@ -20,6 +21,7 @@ interface Props {
 export function TripsClient({ initialTrips, userId }: Props) {
   const [trips, setTrips] = useState<Trip[]>(initialTrips)
   const [createOpen, setCreateOpen] = useState(false)
+  const [joinOpen, setJoinOpen] = useState(false)
   const [editingTrip, setEditingTrip] = useState<Trip | null>(null)
   const [deletingTrip, setDeletingTrip] = useState<Trip | null>(null)
 
@@ -84,13 +86,24 @@ export function TripsClient({ initialTrips, userId }: Props) {
               : `${trips.length} trip${trips.length > 1 ? 's' : ''} in the works`}
           </p>
         </div>
-        <button
-          onClick={() => setCreateOpen(true)}
-          className="flex items-center gap-2 text-sm font-semibold text-white bg-gradient-to-r from-sky-400 to-blue-500 hover:from-sky-500 hover:to-blue-600 px-4 py-2 rounded-xl shadow-md hover:shadow-sky-200 hover:-translate-y-0.5 transition-all duration-200"
-        >
-          <Plus className="w-4 h-4" />
-          New trip
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setJoinOpen(true)}
+            className="flex items-center gap-2 text-sm font-semibold text-gray-600 bg-white border border-gray-200 hover:border-violet-300 hover:text-violet-600 hover:bg-violet-50 px-4 py-2 rounded-xl shadow-sm hover:-translate-y-0.5 transition-all duration-200"
+          >
+            <Hash className="w-4 h-4" />
+            <span className="hidden sm:inline">Join trip</span>
+            <span className="sm:hidden">Join</span>
+          </button>
+          <button
+            onClick={() => setCreateOpen(true)}
+            className="flex items-center gap-2 text-sm font-semibold text-white bg-gradient-to-r from-sky-400 to-blue-500 hover:from-sky-500 hover:to-blue-600 px-4 py-2 rounded-xl shadow-md hover:shadow-sky-200 hover:-translate-y-0.5 transition-all duration-200"
+          >
+            <Plus className="w-4 h-4" />
+            <span className="hidden sm:inline">New trip</span>
+            <span className="sm:hidden">New</span>
+          </button>
+        </div>
       </div>
 
       {/* Grid */}
@@ -123,6 +136,7 @@ export function TripsClient({ initialTrips, userId }: Props) {
       )}
 
       <CreateTripModal open={createOpen} onClose={() => setCreateOpen(false)} />
+      <JoinTripModal open={joinOpen} onClose={() => setJoinOpen(false)} />
 
       {editingTrip && (
         <EditTripModal
