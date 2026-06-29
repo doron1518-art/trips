@@ -1,8 +1,14 @@
-import { type NextRequest } from 'next/server'
+import { type NextRequest, NextResponse } from 'next/server'
 import { updateSession } from '@/lib/supabase/middleware'
 
 export async function proxy(request: NextRequest) {
-  return updateSession(request)
+  try {
+    return await updateSession(request)
+  } catch (err) {
+    // Log the real error so it appears in Vercel Function Logs
+    console.error('[proxy] fatal error:', err)
+    return NextResponse.next()
+  }
 }
 
 export const config = {
