@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { Plane } from 'lucide-react'
 
 const MESSAGES = [
   'Packing bags…',
@@ -12,9 +13,6 @@ const MESSAGES = [
   'Calculating layovers…',
   'Almost wheels-up…',
 ]
-
-// Circumference of the orbit circle (r=52): 2π×52 ≈ 327px
-const ORBIT_C = 327
 
 interface Props {
   visible: boolean
@@ -47,17 +45,13 @@ export function TravelLoader({ visible }: Props) {
     <>
       {/* ── Keyframes injected once ── */}
       <style>{`
-        @keyframes tl-spin {
+        @keyframes tl-orbit {
           from { transform: rotate(0deg); }
           to   { transform: rotate(360deg); }
         }
         @keyframes tl-bounce {
           0%, 80%, 100% { transform: translateY(0);   opacity: .5; }
           40%            { transform: translateY(-5px); opacity: 1; }
-        }
-        @keyframes tl-fade-in {
-          from { opacity: 0; transform: translateY(6px); }
-          to   { opacity: 1; transform: translateY(0);   }
         }
       `}</style>
 
@@ -76,112 +70,34 @@ export function TravelLoader({ visible }: Props) {
 
           <div className="flex flex-col items-center gap-6 px-8 py-9">
 
-            {/* ── SVG orbit animation ── */}
-            <svg
-              width="160"
-              height="160"
-              viewBox="0 0 160 160"
-              aria-hidden="true"
-              overflow="visible"
-            >
-              <defs>
-                {/* Soft glow filter on the plane */}
-                <filter id="tl-glow" x="-50%" y="-50%" width="200%" height="200%">
-                  <feGaussianBlur stdDeviation="2" result="blur" />
-                  <feMerge>
-                    <feMergeNode in="blur" />
-                    <feMergeNode in="SourceGraphic" />
-                  </feMerge>
-                </filter>
-              </defs>
+            {/* ── Orbit animation (pure CSS, no SVG motion paths) ── */}
+            <div className="relative w-40 h-40 flex items-center justify-center">
+              {/* Soft outer ring */}
+              <div className="absolute inset-0 rounded-full border-[6px] border-sky-50" />
+              {/* Dashed track */}
+              <div className="absolute inset-2 rounded-full border border-dashed border-sky-200" />
 
-              {/* ── Orbit track: soft outer ring ── */}
-              <circle
-                cx="80" cy="80" r="52"
-                fill="none"
-                stroke="#e0f2fe"
-                strokeWidth="8"
-              />
-
-              {/* ── Orbit track: dashed line ── */}
-              <circle
-                cx="80" cy="80" r="52"
-                fill="none"
-                stroke="#bae6fd"
-                strokeWidth="1.5"
-                strokeDasharray="3 9"
-              />
-
-              {/* ── Comet arc: spinning highlight that follows the plane ── */}
-              <circle
-                cx="80" cy="80" r="52"
-                fill="none"
-                stroke="#38bdf8"
-                strokeWidth="4"
-                strokeLinecap="round"
-                strokeDasharray={`${ORBIT_C * 0.22} ${ORBIT_C * 0.78}`}
-                style={{
-                  animation: 'tl-spin 2.4s linear infinite',
-                  transformOrigin: '80px 80px',
-                  opacity: 0.7,
-                }}
-              />
-
-              {/* ── Hidden motion path (full clockwise circle) ── */}
-              <path
-                id="tl-orbit"
-                d="M 132,80 A 52,52 0 1,1 131.999,80"
-                fill="none"
-                stroke="none"
-              />
-
-              {/* ── Airplane traveling the orbit ── */}
-              <g filter="url(#tl-glow)">
-                <animateMotion dur="2.4s" repeatCount="indefinite" rotate="auto">
-                  <mpath href="#tl-orbit" />
-                </animateMotion>
-
-                {/*
-                  Plane centered at origin, nose pointing right (+x).
-                  rotate="auto" on animateMotion aligns the +x axis with the
-                  path tangent, so the nose always faces the direction of travel.
-
-                  Body:   a narrow fuselage (right-pointing triangle)
-                  Wings:  two swept-back delta shapes
-                  Tail:   two small fins at the rear
-                */}
-                <g>
-                  {/* Drop shadow */}
-                  <path
-                    d="M12,0 L-8,-3.5 L-6,0 L-8,3.5 Z
-                       M4,-3.5 L-4,-12 L-7,-9 L2,-3.5 Z
-                       M4,3.5 L-4,12 L-7,9 L2,3.5 Z
-                       M-6,-3 L-10,-7 L-11.5,-5 L-7.5,-3 Z
-                       M-6,3 L-10,7 L-11.5,5 L-7.5,3 Z"
-                    fill="#0369a1"
-                    opacity="0.25"
-                    transform="translate(2,3)"
+              {/* Rotating wrapper carries the plane around the ring */}
+              <div
+                className="absolute inset-0"
+                style={{ animation: 'tl-orbit 2.4s linear infinite' }}
+              >
+                <div className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2">
+                  <Plane
+                    className="w-7 h-7 text-sky-500"
+                    strokeWidth={2}
+                    style={{
+                      transform: 'rotate(90deg)',
+                      filter: 'drop-shadow(0 2px 4px rgba(14,165,233,0.45))',
+                    }}
                   />
-                  {/* Wings + tail (slightly lighter fill) */}
-                  <path
-                    d="M4,-3.5 L-4,-12 L-7,-9 L2,-3.5 Z
-                       M4,3.5 L-4,12 L-7,9 L2,3.5 Z
-                       M-6,-3 L-10,-7 L-11.5,-5 L-7.5,-3 Z
-                       M-6,3 L-10,7 L-11.5,5 L-7.5,3 Z"
-                    fill="#0ea5e9"
-                  />
-                  {/* Fuselage (brighter highlight) */}
-                  <path
-                    d="M12,0 L-8,-3.5 L-6,0 L-8,3.5 Z"
-                    fill="#38bdf8"
-                  />
-                </g>
-              </g>
+                </div>
+              </div>
 
-              {/* ── Center hub ── */}
-              <circle cx="80" cy="80" r="5"  fill="#e0f2fe" />
-              <circle cx="80" cy="80" r="2.5" fill="#7dd3fc" />
-            </svg>
+              {/* Center hub */}
+              <div className="absolute w-3 h-3 rounded-full bg-sky-100" />
+              <div className="absolute w-1.5 h-1.5 rounded-full bg-sky-400" />
+            </div>
 
             {/* ── Message ── */}
             <div className="flex flex-col items-center gap-3 min-h-[52px] justify-center">
